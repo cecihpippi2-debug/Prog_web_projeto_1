@@ -28,6 +28,11 @@ Route::get('/aluno', [AlunoController::class,'index'])->name('aluno.index'); //l
 Route::get('/aluno/create', [AlunoController::class,'create'])->name('aluno.create'); 
 //Submeter o formulário
 Route::post('/aluno', [AlunoController::class,'store'])->name('aluno.store'); 
+Route::delete('/aluno{id}', [AlunoController::class,'destroy'])->name('aluno.destroy'); 
+Route::post('/aluno/search', [AlunoController::class,'search'])->name('aluno.search'); 
+Route::get('/aluno/edit/{id}', [AlunoController::class,'edit'])->name('aluno.edit'); 
+Route::put('/aluno/updaate/{id}', [AlunoController::class,'update'])->name('aluno.update'); 
+
 
 
 
