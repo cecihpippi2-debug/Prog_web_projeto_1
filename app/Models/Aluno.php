@@ -14,6 +14,13 @@ class Aluno extends Model
     protected $fillable = [ //campos que vão ser salvos no banco
         'nome',
         'cpf',
-        'telefone'
+        'telefone',
+        'imagem',
+        'categoria_id',
     ];
+
+    //Chave estrangeira para categoria
+    public function categoria(){
+        return $this->belongsTo(CategoriaAluno::class, 'categoria_id');
+    }
 }

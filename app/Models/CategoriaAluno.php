@@ -9,10 +9,11 @@ class CategoriaAluno extends Model
 {
 
     use HasFactory;
+    
+    protected $table = 'categoria_alunos';
 
-    protected $table ="categoria_alunos";
-    protected $fillable = [ //campos que vão ser salvos no banco
+    protected $fillable = [
         'nome',
-        'nivel'
+        'nivel',
     ];
 }

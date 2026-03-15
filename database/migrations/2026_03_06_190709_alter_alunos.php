@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
-        
+
         Schema::table('alunos', function (Blueprint $table) {
-            $table->string('imagem',150)->nullable()->after('telefone');
-            $table->foreignId('categoria_id')->after('imagem')->constrained('categoria_alunos');
+            $table->string('imagem', 150)->nullable()
+                ->after('telefone');
+            $table->foreignId('categoria_id')
+                ->after('imagem')->constrained('categoria_alunos');
         });
 
         Schema::enableForeignKeyConstraints();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Aluno;
+use App\Models\CategoriaAluno;
 
 class AlunoController extends Controller
 {
@@ -18,41 +19,47 @@ class AlunoController extends Controller
     
     function create(){
         
-        return view('aluno.form');
+        $categorias = CategoriaAluno::orderBy('nome')->get();
+        
+        return view('aluno.form', ['categorias' => $categorias]);
+    }
+
+    function validateRequest(Request $request){
+        
+        $request ->validate([
+            'nome' => 'required' ,
+             'cpf' => 'required',
+             'categoria_id'=>'required',
+             'imagem'=> 'image|image|mimes:png,jpg,jpeg',
+        ], [
+            'nome.required' => "O campo Nome é obrigatório",
+            'cpf.required' => "O campo CPF é obrigatório",
+            'categoria_id.required' => "O campo Categoria é obrigatório",
+            'imagem.image' => "O campo Imagem é obrigatório",
+            'imagem.mimes' => "O campo Imagem deve ser do tipo png, jpg, jpeg",
+        ]);
+
     }
 
     function store( Request $request){
-        $request ->validate([
-            'nome' => 'required' ,
-             'cpf' => 'required', 
-        ], [
-            'nome' => "O campo Nome é obrigatório",
-            'cpf' => "O campo CPF é obrigatório"
-        ]);
+        
+        $this ->validateRequest($request);
 
-        Aluno::create([
-            'nome' => $request ->nome,
-            'cpf' => $request ->cpf,
-            'telefone' => $request ->telefone
-        ]);
+        Aluno::create( $request->all());
         return redirect('aluno');
 
     }
 
     function edit($id){
         $dado = Aluno::find($id);
-        return view('aluno.form', ['dado'=> $dado]);
+        $categorias = CategoriaAluno::orderBy('nome')->get();
+
+        return view('aluno.form', ['dado'=> $dado, 'categorias' => $categorias]);
     }
 
     function update(Request $request, $id){
-        $request->validate([
-            'nome' => 'required',
-            'cpf' => 'required',
-        ], [
-            'nome' => "O :attribute é obrigatório",
-            'cpf' => "O :attribute é obrigatório",
 
-        ]);
+        $this ->validateRequest($request);
 
         Aluno::find($id)->update($request->all());
 
