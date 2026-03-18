@@ -11,7 +11,7 @@ class Aluno extends Model
 
     protected $table ="alunos";
 
-    protected $fillable = [ //campos que vão ser salvos no banco
+    protected $fillable = [ //Campos que vão ser salvos no banco
         'nome',
         'cpf',
         'telefone',

@@ -44,8 +44,18 @@ class AlunoController extends Controller
     function store( Request $request){
         
         $this ->validateRequest($request);
+        $data=$request->all();
+        $imagem = $request->file('imagem');
 
-        Aluno::create( $request->all());
+        if($imagem){
+            $nome_imagem = date('YmdiHs').".".$imagem->getClientOriginalExtension();
+            $diretorio= "imagem/aluno/";
+            $imagem->storeAs($diretorio, $nome_imagem, 'public');
+
+            $data['imagem']= $diretorio.$nome_imagem;
+        }
+
+        Aluno::create($data);
         return redirect('aluno');
 
     }
@@ -61,7 +71,19 @@ class AlunoController extends Controller
 
         $this ->validateRequest($request);
 
-        Aluno::find($id)->update($request->all());
+        $data=$request->all();
+        $imagem = $request->file('imagem');
+
+        if($imagem){
+            $nome_imagem = date('YmdiHs').".".$imagem->getClientOriginalExtension();
+            $diretorio= "imagem/aluno/";
+            $imagem->storeAs($diretorio, $nome_imagem, 'public');
+
+            $data['imagem']= $diretorio.$nome_imagem;
+        }
+
+
+        Aluno::find($id)->update($data);
 
         return redirect('aluno');
     }
