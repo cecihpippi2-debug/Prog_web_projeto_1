@@ -34,5 +34,10 @@ Route::get('/aluno/edit/{id}', [AlunoController::class,'edit'])->name('aluno.edi
 Route::put('/aluno/updaate/{id}', [AlunoController::class,'update'])->name('aluno.update'); 
 
 
+// Versão reduzida para CursoController -> Resources
+Route::resource('curso', \App\Http\Controllers\CursoController::class); 
+Route::post('/curso/search', \App\Http\Controllers\CursoController::class, 'search')->name('curso.search');
+
+
 
 
