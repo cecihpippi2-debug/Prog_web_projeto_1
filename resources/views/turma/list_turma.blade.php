@@ -1,21 +1,20 @@
 @extends('main')
-@section('titulo', "Listagem de curso")
+@section('titulo', "Listagem de turmas")
 @section('conteudo')
 
-<h4>Listagem de Cursos</h4>
+<h4>Listagem de Turma - Curso: {{$curso->nome}}</h4>
+
 <div clas="row"> 
     <div class="col">
-        <form action = "{{route('aluno.search')}}" method="post">
+        <form action = "{{route('turma.search')}}" method="post">
             @csrf
             <div class="row">
-
+                <input type="hidden" name="curso_id" value="{{$curso->id}}">
                 <div class="col-md-3">
                     <label class="form-label">Tipo</label>
                     <select name="tipo" class = "form-select">
                         <option value="Nome">Nome</option>
-                        <option value="requisito">Requisito</option>
-                        <option value="carga_horaria">Carga Horária</option>
-                        <option value="valor">Valor</option>
+                        <option value="codigo">Código</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -27,7 +26,11 @@
                 </div>
                 
                 <div class="col-md-3">
-                    <a href="{{url('aluno/create')}}" class="btn btn-success">Novo</a>
+                    <a href="{{ route ('curso.turmas.create', $curso->id)}}" class="btn btn-success">Novo</a>
+                </div>
+
+                <div class="col-md-3">
+                    <a href="{{ url('curso') }}" class="btn btn-secondary">Voltar</a>
                 </div>
 
             </div>
@@ -41,9 +44,9 @@
             <tr>
             <th scope="col">#</th>
             <th scope="col">Nome</th>
-            <th scope="col">Requisito</th>
-            <th scope="col">Carga Horária</th>
-            <th scope="col">Valor</th>
+            <th scope="col">Código</th>
+            <th scope="col">Data de Início</th>
+            <th scope="col">Data de Fim</th>
             <th scope="col">Ação</th>
             <th scope="col">Ação</th>
 
@@ -51,15 +54,16 @@
         </thead>
         <tbody>
             @foreach ($dados as $item)
+
                 <tr>
                 <th scope="row">{{$item -> id}}</th>
                 <td>{{$item ->nome}}</td>
-                <td>{{$item ->requisito}}</td>
-                <td>{{$item ->carga_horaria}}</td>
-                <td>{{$item ->valor}}</td>
-                <td><a href="{{ route ('curso.edit', $item->id) }}" class="btn btn-warning">Editar</a></td>
+                <td>{{$item ->codigo}}</td>
+                <td>{{ date('d/m/Y', strtotime($item->data_inicio)) }}</td>
+                <td>{{ date('d/m/Y', strtotime($item->data_fim)) }}</td>
+                <td><a href="{{ route ('turma.edit', $item->id) }}" class="btn btn-warning">Editar</a></td>
                 <td>
-                    <form action="{{ route ('curso.destroy', $item->id) }}" method="post">
+                    <form action="{{ route ('turma.destroy', $item->id) }}" method="post">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger"

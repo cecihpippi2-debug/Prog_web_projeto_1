@@ -16,6 +16,21 @@
     <main>
       <div class="container mt-4">
           <div class="row">
+
+            @if(session('error'))
+            <div class="alert alert-danger alert dismissible fade show" role="alert">
+              {{session('error')}}
+              <button type="button" class="btn-close" data-ds-dismiss="alert" arial-label="fechar"></button>
+            </div>
+            @endif
+
+            @if(session('sucess'))
+            <div class="alert alert-sucess alert dismissible fade show" role="alert">
+              {{session('session')}}
+              <button type="button" class="btn-close" data-ds-dismiss="alert" arial-label="fechar"></button>
+            </div>
+            @endif
+
             @if($errors->any())
             <ul>
               @foreach ($errors ->all() as $errors)

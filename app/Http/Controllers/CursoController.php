@@ -13,12 +13,12 @@ class CursoController extends Controller
 
         // dd($dados);
 
-        return view('curso.list', ['dados' => $dados]);
+        return view('curso.list_curso', ['dados' => $dados]);
     }
     
     function create(){
                 
-        return view('curso.form');
+        return view('curso.form_curso');
     }
 
     function validateRequest(Request $request){
@@ -43,30 +43,33 @@ class CursoController extends Controller
 
 
         Curso::create($data);
-        return redirect('curso');
+        return redirect('curso')->with('success', 'Registro inserido com sucesso');
 
     }
 
     function edit($id){
         $dado = Curso::find($id);
 
-        return view('curso.form', ['dado'=> $dado]);
+        return view('curso.form_curso', ['dado'=> $dado]);
     }
 
     function update(Request $request, $id){
 
         $this ->validateRequest($request);
-
         $data=$request->all();
 
-
         Curso::find($id)->update($data);
-
-        return redirect('curso');
+        return redirect('curso')->with('success', 'Registro atualizado com sucesso');
     }
 
     function destroy($id){
-        Curso::destroy($id);
+
+        $dado=Curso::find($id);
+        if($dado->turmas->count() > 0){
+            return redirect('curso')->with('error', 'Não é possível excluir o curso pois há turmas vinculadas a ela.');
+        }
+
+        $dado->delete();
         return redirect('curso');
     }
 
@@ -77,6 +80,6 @@ class CursoController extends Controller
             $dados=Curso::all();
         }
 
-        return view('curso.list', ['dados'=>$dados]);
+        return view('curso.list_curso', ['dados'=>$dados]);
     }
 }

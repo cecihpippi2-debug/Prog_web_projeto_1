@@ -4,62 +4,90 @@ namespace App\Http\Controllers;
 
 use App\Models\Turma;
 use Illuminate\Http\Request;
+use App\Models\Curso;
+
 
 class TurmaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    function index(Curso $curso){
+        
+        $dados = $curso->turmas;
+
+        return view('turma.list_turma', ['dados' => $dados, 'curso' => $curso]);
+    }
+    
+    function create(Curso $curso){
+                
+        return view('turma.form_turma', ['curso' => $curso]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    function validateRequest(Request $request){
+        
+        $request ->validate([
+            'nome' => 'required'
+    
+            ], [
+            'nome.required' => "O campo Nome é obrigatório"
+            
+        ]);
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    function store(Request $request)
     {
-        //
+        $this->validateRequest($request);
+        $data = $request->all();
+
+        $turma = Turma::create($data);
+
+        return redirect()->route('curso.turmas', $turma->curso_id)->with('success', 'Registro inserido com sucesso');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Turma $turma)
-    {
-        //
+    function edit($id){
+        $dado = Turma::find($id);
+        $curso = Curso::orderBy('nome')->get();
+
+        return view('turma.form_turma', ['dado'=> $dado, 'curso' => $curso]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Turma $turma)
-    {
-        //
+    function update(Request $request, $id){
+
+        $this ->validateRequest($request);
+
+        $data=$request->all();
+
+
+        Turma::find($id)->update($data);
+
+        $turma = Turma::find($id);
+        return redirect()->route('curso.turmas', $turma->curso_id)->with('success', 'Registro atualizado com sucesso');
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Turma $turma)
-    {
-        //
-    }
+    function destroy($id)
+        {
+            $dado = Turma::findOrfail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Turma $turma)
-    {
-        //
+            $dado->delete();
+
+            return redirect()->route('curso.turmas', $dado->curso_id);
+        }
+
+
+    
+    
+    
+        
+    function search(Request $request){
+        $curso = Curso::findOrFail($request->curso_id);
+
+        if(!empty($request->valor)){
+            $dados = Turma::where('curso_id', $curso->id)->
+            where($request->tipo, 'like', '%' . $request->valor . '%') ->get();
+        } else{
+            $dados=Turma::where('curso_id', $curso->id)->orderBy('nome')->get();
+        }
+
+        return view('turma.list_turma', ['dados'=>$dados, 'curso'=>$curso]);
     }
 }
